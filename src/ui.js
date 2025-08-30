@@ -1,7 +1,16 @@
 // src/ui.js
 
 import { affirmations, journalPrompts, currentLang, translations } from './i18n.js';
-import { localData, saveData } from './firebase.js';
+
+// Firebase olmadığı için verileri geçici olarak tarayıcıda tutacak nesne
+let localData = {
+     negativeThought: "",
+     reframedThought: "",
+     achievements: [],
+     journalEntries: [],
+     accomplishmentToday: "",
+     gratefulFor: ""
+};
 
 const achievementInput = document.getElementById('achievement-input');
 const achievementsList = document.getElementById('achievements-list');
@@ -38,7 +47,8 @@ export function addAchievement() {
     if (text) {
         if (!localData.achievements) localData.achievements = [];
         localData.achievements.push(text);
-        saveData(localData); // Firebase'e kaydet
+        addAchievementToUI(text); // UI'ı direkt güncelle
+        // saveData(localData); // Firebase'e kaydetme komutu devre dışı
         achievementInput.value = '';
     }
 }
@@ -63,7 +73,8 @@ export function saveJournalEntry() {
         const newEntry = { text: text, date: new Date().toISOString() };
         if (!localData.journalEntries) localData.journalEntries = [];
         localData.journalEntries.push(newEntry);
-        saveData(localData); // Firebase'e kaydet
+        addJournalEntryToUI(newEntry); // UI'ı direkt güncelle
+        // saveData(localData); // Firebase'e kaydetme komutu devre dışı
         journalEntryInput.value = '';
     }
 }
@@ -75,7 +86,6 @@ export function showRandomJournalPrompt() {
      journalEntryInput.focus();
 }
 
-// Dictation Logic
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition;
 let isDictating = false;
