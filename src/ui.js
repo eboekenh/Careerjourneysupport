@@ -1,7 +1,7 @@
 // src/ui.js
 
-import { affirmations, journalPrompts, currentLang, translations } from './src/i18n.js';
-import { localData, saveData } from './src/firebase.js';
+import { affirmations, journalPrompts, currentLang, translations } from './i18n.js';
+import { localData, saveData } from './firebase.js';
 
 const achievementInput = document.getElementById('achievement-input');
 const achievementsList = document.getElementById('achievements-list');
