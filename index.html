@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kariyer Yolculuğu Destek Uygulaması</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(to right, #4a90e2, #50e3c2); /* Mavi-yeşil gradient */
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        .btn-secondary:hover {
+             background: #cbd5e1;
+             box-shadow: none;
+             transform: none;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Ayarlar ve Başlık Bölümü -->
+        <header class="mb-10">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <button id="lang-tr" class="font-semibold text-gray-700 px-2 py-1 rounded-md text-sm hover:bg-gray-200">TR</button>
+                    <button id="lang-en" class="text-gray-500 px-2 py-1 rounded-md text-sm hover:bg-gray-200">EN</button>
+                </div>
+                <button id="export-data" class="btn btn-secondary text-sm" data-lang-key="exportData">Veriyi Dışa Aktar</button>
+            </div>
+            <div class="text-center">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-800" data-lang-key="appTitle">Kariyer Yolculuğu Destek Uygulaması</h1>
+                <p class="text-gray-600 mt-2" data-lang-key="appSubtitle">Ecem, bu zorlu süreçte kendine nazik davran ve adımlarını kutla.</p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Düşünceyi Yeniden Çerçeveleme -->
+            <div class="card md:col-span-2">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4" data-lang-key="thoughtFlipTitle">1. Düşünceyi Yeniden Çerçeveleme (Thought Flip)</h2>
+                <p class="text-gray-600 mb-4" data-lang-key="thoughtFlipDesc">Aklına gelen olumsuz bir düşünceyi yaz ve onu bir arkadaşına söyler gibi daha nazik ve gerçekçi bir tona dönüştür.</p>
+                <div class="space-y-4">
+                    <div>
+                        <label for="negative-thought" class="font-medium text-gray-700 block mb-1" data-lang-key="negativeThought">Olumsuz Düşünce:</label>
+                        <textarea id="negative-thought" class="input-field" rows="2" data-lang-placeholder-key="negativeThoughtPlaceholder"></textarea>
+                    </div>
+                    <div>
+                        <label for="reframed-thought" class="font-medium text-gray-700 block mb-1" data-lang-key="reframedThought">Yeniden Çerçevelenmiş Hali:</label>
+                        <textarea id="reframed-thought" class="input-field" rows="2" data-lang-placeholder-key="reframedThoughtPlaceholder"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Özgüven Artırma -->
+            <div class="card">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4" data-lang-key="strengthsTitle">2. Güçlü Yönlerini Hatırla</h2>
+                <p class="text-gray-600 mb-2" data-lang-key="strengthsDesc">Geçmiş başarılarını listele. Bu senin "Kanıt Portfolyon" olsun.</p>
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="achievement-input" class="input-field" data-lang-placeholder-key="achievementPlaceholder">
+                    <button id="add-achievement" class="btn" data-lang-key="addBtn">Ekle</button>
+                </div>
+                <ul id="achievements-list" class="list-disc list-inside text-gray-700 space-y-1"></ul>
+            </div>
+
+            <!-- Olumlamalar -->
+            <div class="card">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4" data-lang-key="affirmationTitle">3. Günün Olumlaması</h2>
+                <div class="flex-grow flex flex-col items-center justify-center bg-indigo-50 p-4 rounded-lg text-center">
+                    <p id="affirmation-text" class="text-lg font-medium text-indigo-800 italic">...</p>
+                </div>
+                <button id="new-affirmation" class="btn mt-4" data-lang-key="newAffirmationBtn">Yeni Olumlama</button>
+            </div>
+            
+            <!-- Serbest Yazı (Journal) -->
+            <div class="card md:col-span-2">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4" data-lang-key="journalTitle">4. Serbest Yazı Alanı</h2>
+                <p class="text-gray-600 mb-4" data-lang-key="journalDesc">Aklındakileri buraya dök. Yazmak veya konuşmak, düşüncelerini netleştirmene yardımcı olabilir.</p>
+                <textarea id="journal-entry" class="input-field mb-4" rows="5" data-lang-placeholder-key="journalPlaceholder"></textarea>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <button id="save-journal" class="btn" data-lang-key="saveJournalBtn">Girdiyi Kaydet</button>
+                    <button id="dictate-journal" class="btn btn-secondary" data-lang-key="dictateBtn">Dikte Et</button>
+                    <button id="prompt-journal" class="btn btn-secondary" data-lang-key="promptBtn">Yeni Konu Öner</button>
+                </div>
+                <h3 class="font-semibold text-gray-700 mt-4 border-t pt-4" data-lang-key="pastEntriesTitle">Geçmiş Girdiler</h3>
+                <div id="journal-history" class="mt-2 space-y-2 text-sm text-gray-600 max-h-48 overflow-y-auto"></div>
+            </div>
+
+            <!-- Günlük Kazanımlar -->
+            <div class="card md:col-span-2">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4" data-lang-key="dailyWinsTitle">5. Günlük Kazanımlar ve Şükran Defteri</h2>
+                <p class="text-gray-600 mb-4" data-lang-key="dailyWinsDesc">Her akşam sadece 1 dakikanı ayırarak odağını ilerlemeye çevir.</p>
+                <div class="space-y-4">
+                    <div>
+                        <label for="accomplishment-today" class="font-medium text-gray-700 block mb-1" data-lang-key="accomplishmentLabel">Bugün başardığın 1 şey:</label>
+                        <input type="text" id="accomplishment-today" class="input-field" data-lang-placeholder-key="accomplishmentPlaceholder">
+                    </div>
+                    <div>
+                        <label for="grateful-for" class="font-medium text-gray-700 block mb-1" data-lang-key="gratefulLabel">Minnettar olduğun 1 şey:</label>
+                        <input type="text" id="grateful-for" class="input-field" data-lang-placeholder-key="gratefulPlaceholder">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <script type="module">
+        // Firebase SDK'larını içe aktar
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ---- DİL VE METİN YÖNETİMİ ----
+        const translations = {
+            tr: {
+                appTitle: "Kariyer Yolculuğu Destek Uygulaması",
+                appSubtitle: "Ecem, bu zorlu süreçte kendine nazik davran ve adımlarını kutla.",
+                exportData: "Veriyi Dışa Aktar",
+                thoughtFlipTitle: "1. Düşünceyi Yeniden Çerçeveleme (Thought Flip)",
+                thoughtFlipDesc: "Aklına gelen olumsuz bir düşünceyi yaz ve onu bir arkadaşına söyler gibi daha nazik ve gerçekçi bir tona dönüştür.",
+                negativeThought: "Olumsuz Düşünce:",
+                reframedThought: "Yeniden Çerçevelenmiş Hali:",
+                negativeThoughtPlaceholder: "Örn: 'Bu roller için yeterince iyi değilim.'",
+                reframedThoughtPlaceholder: "Örn: 'Doğru rol henüz beni bulmadı. Her başvuruda öğreniyor ve adapte oluyorum.'",
+                strengthsTitle: "2. Güçlü Yönlerini Hatırla",
+                strengthsDesc: "Geçmiş başarılarını listele. Bu senin 'Kanıt Portfolyon' olsun.",
+                achievementPlaceholder: "Bir başarın...",
+                addBtn: "Ekle",
+                affirmationTitle: "3. Günün Olumlaması",
+                newAffirmationBtn: "Yeni Olumlama",
+                journalTitle: "4. Serbest Yazı Alanı",
+                journalDesc: "Aklındakileri buraya dök. Yazmak veya konuşmak, düşüncelerini netleştirmene yardımcı olabilir.",
+                journalPlaceholder: "Bugün aklından neler geçiyor?",
+                saveJournalBtn: "Girdiyi Kaydet",
+                dictateBtn: "Dikte Et",
+                promptBtn: "Yeni Konu Öner",
+                pastEntriesTitle: "Geçmiş Girdiler",
+                dailyWinsTitle: "5. Günlük Kazanımlar ve Şükran Defteri",
+                dailyWinsDesc: "Her akşam sadece 1 dakikanı ayırarak odağını ilerlemeye çevir.",
+                accomplishmentLabel: "Bugün başardığın 1 şey:",
+                accomplishmentPlaceholder: "Örn: 'CV'mi bir role özel güncelledim.'",
+                gratefulLabel: "Minnettar olduğun 1 şey:",
+                gratefulPlaceholder: "Örn: 'Destek olan bir arkadaşımla konuştum.'",
+            },
+            en: {
+                appTitle: "Career Journey Support App",
+                appSubtitle: "Ecem, be kind to yourself during this challenging process and celebrate your steps.",
+                exportData: "Export Data",
+                thoughtFlipTitle: "1. Thought Flip",
+                thoughtFlipDesc: "Write down a negative thought and reframe it in a kinder, more realistic tone, as if you were talking to a friend.",
+                negativeThought: "Negative Thought:",
+                reframedThought: "Reframed Version:",
+                negativeThoughtPlaceholder: "e.g., 'I'm not good enough for these roles.'",
+                reframedThoughtPlaceholder: "e.g., 'The right role hasn't found me yet. I'm learning and adapting with every application.'",
+                strengthsTitle: "2. Remember Your Strengths",
+                strengthsDesc: "List your past achievements. Let this be your 'Proof Portfolio'.",
+                achievementPlaceholder: "An achievement...",
+                addBtn: "Add",
+                affirmationTitle: "3. Affirmation of the Day",
+                newAffirmationBtn: "New Affirmation",
+                journalTitle: "4. Free Journaling Space",
+                journalDesc: "Pour your thoughts out here. Writing or speaking can help you clarify your mind.",
+                journalPlaceholder: "What's on your mind today?",
+                saveJournalBtn: "Save Entry",
+                dictateBtn: "Dictate",
+                promptBtn: "Suggest a Prompt",
+                pastEntriesTitle: "Past Entries",
+                dailyWinsTitle: "5. Daily Wins & Gratitude Log",
+                dailyWinsDesc: "Shift your focus to progress by taking just 1 minute each evening.",
+                accomplishmentLabel: "1 thing you accomplished today:",
+                accomplishmentPlaceholder: "e.g., 'I updated my resume for a specific role.'",
+                gratefulLabel: "1 thing you are grateful for:",
+                gratefulPlaceholder: "e.g., 'I talked to a supportive friend.'",
+            }
+        };
+        
+        const affirmations = {
+            tr: ["Yetenekliyim, becerikliyim ve her gün öğreniyorum.", "Doğru fırsat doğru zamanda beni bulacak.", "Bu süreçte gösterdiğim çaba ve dayanıklılık çok değerli.", "Her başvuru yeni bir öğrenme deneyimidir.", "Geçmişteki zorlukların üstesinden geldim, bunun da üstesinden geleceğim."],
+            en: ["I am skilled, resourceful, and learning every day.", "The right opportunity will find me at the right time.", "My effort and resilience in this process are valuable.", "Every application is a new learning experience.", "I have overcome challenges in the past, and I will overcome this one too."]
+        };
+
+        const journalPrompts = {
+            tr: ["Bugün işte aradığım 3 temel özellik nedir?", "Kendimi en yetenekli hissettiğim bir anı anlat.", "5 yıl sonraki ideal iş günüm nasıl görünüyor?", "Bu hafta iş arama sürecimde öğrendiğim en önemli şey neydi?", "Bugün beni ne gülümsetti?"],
+            en: ["What are 3 core qualities I'm looking for in a job today?", "Describe a time when I felt most competent.", "What does my ideal workday look like 5 years from now?", "What was the most important thing I learned in my job search this week?", "What made me smile today?"]
+        };
+
+        let currentLang = 'tr';
+
+        function switchLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            document.querySelectorAll('[data-lang-placeholder-key]').forEach(el => {
+                const key = el.getAttribute('data-lang-placeholder-key');
+                 if (translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+            // Aktif dil butonunu güncelle
+            document.getElementById('lang-tr').classList.toggle('font-semibold', lang === 'tr');
+            document.getElementById('lang-tr').classList.toggle('text-gray-700', lang === 'tr');
+            document.getElementById('lang-tr').classList.toggle('text-gray-500', lang !== 'tr');
+            document.getElementById('lang-en').classList.toggle('font-semibold', lang === 'en');
+            document.getElementById('lang-en').classList.toggle('text-gray-700', lang === 'en');
+            document.getElementById('lang-en').classList.toggle('text-gray-500', lang !== 'en');
+            
+            showRandomAffirmation();
+            if (recognition) {
+                recognition.lang = currentLang === 'tr' ? 'tr-TR' : 'en-US';
+            }
+        }
+
+        // ---- FIREBASE KURULUMU ----
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "YOUR_API_KEY", authDomain: "YOUR_AUTH_DOMAIN", projectId: "YOUR_PROJECT_ID" };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        let userId = null;
+        let appDataDocRef = null;
+        let localData = {
+             negativeThought: "",
+             reframedThought: "",
+             achievements: [],
+             journalEntries: [],
+             accomplishmentToday: "",
+             gratefulFor: ""
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                appDataDocRef = doc(db, "artifacts", appId, "users", userId, "appData", "data");
+                
+                onSnapshot(appDataDocRef, (doc) => {
+                    if (doc.exists()) {
+                        localData = { ...localData, ...doc.data() };
+                        updateUIFromData();
+                    } else {
+                        setDoc(appDataDocRef, localData);
+                    }
+                });
+
+            } else {
+                await signInAnonymously(auth);
+            }
+        });
+        
+        const debounce = (func, delay) => {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        };
+
+        const saveData = debounce(async (data) => {
+            if (!appDataDocRef) return;
+            try {
+                await setDoc(appDataDocRef, data, { merge: true });
+            } catch (error) {
+                console.error("Error saving data: ", error);
+            }
+        }, 500);
+
+        function updateUIFromData() {
+            document.getElementById('negative-thought').value = localData.negativeThought || "";
+            document.getElementById('reframed-thought').value = localData.reframedThought || "";
+            document.getElementById('accomplishment-today').value = localData.accomplishmentToday || "";
+            document.getElementById('grateful-for').value = localData.gratefulFor || "";
+            
+            const achievementsList = document.getElementById('achievements-list');
+            achievementsList.innerHTML = '';
+            (localData.achievements || []).forEach(text => {
+                addAchievementToUI(text);
+            });
+
+            const journalHistory = document.getElementById('journal-history');
+            journalHistory.innerHTML = '';
+            (localData.journalEntries || []).sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(entry => {
+                addJournalEntryToUI(entry);
+            });
+        }
+
+        // ---- UYGULAMA MANTIĞI ----
+        document.addEventListener('DOMContentLoaded', () => {
+            switchLanguage('tr'); 
+
+            const achievementInput = document.getElementById('achievement-input');
+            const addAchievementBtn = document.getElementById('add-achievement');
+            const newAffirmationBtn = document.getElementById('new-affirmation');
+            const saveJournalBtn = document.getElementById('save-journal');
+            const dictateBtn = document.getElementById('dictate-journal');
+            const promptBtn = document.getElementById('prompt-journal');
+
+            document.getElementById('lang-tr').addEventListener('click', () => switchLanguage('tr'));
+            document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
+            document.getElementById('export-data').addEventListener('click', exportData);
+            
+            ['negative-thought', 'reframed-thought', 'accomplishment-today', 'grateful-for'].forEach(id => {
+                 document.getElementById(id).addEventListener('blur', (e) => {
+                     let camelCaseKey = e.target.id.replace(/-(\w)/g, (match, p1) => p1.toUpperCase());
+                     localData[camelCaseKey] = e.target.value;
+                     saveData(localData);
+                 });
+            });
+
+            addAchievementBtn.addEventListener('click', addAchievement);
+            achievementInput.addEventListener('keypress', (e) => e.key === 'Enter' && addAchievement());
+            
+            newAffirmationBtn.addEventListener('click', showRandomAffirmation);
+            
+            saveJournalBtn.addEventListener('click', saveJournalEntry);
+            promptBtn.addEventListener('click', showRandomJournalPrompt);
+            dictateBtn.addEventListener('click', toggleDictation);
+
+            showRandomAffirmation();
+        });
+
+        function addAchievementToUI(text) {
+             const achievementsList = document.getElementById('achievements-list');
+             const li = document.createElement('li');
+             li.textContent = text;
+             achievementsList.appendChild(li);
+        }
+
+        function addAchievement() {
+            const input = document.getElementById('achievement-input');
+            const text = input.value.trim();
+            if (text) {
+                if (!localData.achievements) localData.achievements = [];
+                localData.achievements.push(text);
+                saveData(localData);
+                input.value = '';
+            }
+        }
+        
+        function showRandomAffirmation() {
+            const affirmationText = document.getElementById('affirmation-text');
+            const langAffirmations = affirmations[currentLang];
+            const randomIndex = Math.floor(Math.random() * langAffirmations.length);
+            affirmationText.textContent = `"${langAffirmations[randomIndex]}"`;
+        }
+
+        function addJournalEntryToUI(entry) {
+             const journalHistory = document.getElementById('journal-history');
+             const entryDiv = document.createElement('div');
+             entryDiv.className = 'p-2 bg-gray-50 rounded';
+             const entryDate = new Date(entry.date).toLocaleString(currentLang);
+             entryDiv.innerHTML = `<p class="font-semibold">${entryDate}</p><p>${entry.text.replace(/\n/g, '<br>')}</p>`;
+             journalHistory.prepend(entryDiv);
+        }
+
+        function saveJournalEntry() {
+            const input = document.getElementById('journal-entry');
+            const text = input.value.trim();
+            if (text) {
+                const newEntry = { text: text, date: new Date().toISOString() };
+                if (!localData.journalEntries) localData.journalEntries = [];
+                localData.journalEntries.push(newEntry);
+                saveData(localData);
+                input.value = '';
+            }
+        }
+        
+        function showRandomJournalPrompt() {
+             const journalInput = document.getElementById('journal-entry');
+             const langPrompts = journalPrompts[currentLang];
+             const randomIndex = Math.floor(Math.random() * langPrompts.length);
+             journalInput.value = langPrompts[randomIndex];
+             journalInput.focus();
+        }
+        
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isDictating = false;
+        if(SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = currentLang === 'tr' ? 'tr-TR' : 'en-US';
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = document.getElementById('journal-entry').value;
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript + '. ';
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                document.getElementById('journal-entry').value = finalTranscript + interimTranscript;
+            };
+            
+            recognition.onend = () => {
+                isDictating = false;
+                const dictateBtn = document.getElementById('dictate-journal');
+                dictateBtn.classList.remove('bg-red-500');
+                dictateBtn.textContent = translations[currentLang].dictateBtn;
+            };
+        }
+
+        function toggleDictation() {
+            if (!recognition) return;
+            const dictateBtn = document.getElementById('dictate-journal');
+            if (isDictating) {
+                recognition.stop();
+            } else {
+                recognition.start();
+                isDictating = true;
+                dictateBtn.classList.add('bg-red-500');
+                dictateBtn.textContent = currentLang === 'tr' ? 'Durdur' : 'Stop';
+            }
+        }
+        
+        function exportData() {
+            const dataStr = JSON.stringify(localData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: "application/json"});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `kariyer-destek-verileri-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+    </script>
+</body>
+</html>
+
