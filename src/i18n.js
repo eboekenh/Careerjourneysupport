@@ -1,6 +1,6 @@
 // src/i18n.js
 
-import { showRandomAffirmation } from '../ui.js';
+import { showRandomAffirmation } from './ui.js';
 
 export const translations = {
     tr: {
